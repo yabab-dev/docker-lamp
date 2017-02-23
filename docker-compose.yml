@@ -1,0 +1,30 @@
+version: "3.1"
+services:
+  web:
+    image: 'chymz/php-apache'
+    links:
+     - mysql:mysql
+    volumes:
+      - ./www:/var/www/html
+      - ./conf/php.ini:/usr/local/etc/php/php.ini
+      - ./conf/sites:/etc/apache2/sites-available
+      - ./conf/sites:/etc/apache2/sites-enabled
+      - ./conf/apache2.conf:/etc/apache2/apache2.conf
+    ports:
+      - "9000:80"
+  mysql:
+    image: 'mysql'
+    volumes:
+      - ./conf/mysql.cnf:/etc/mysql/conf.d/mysql.cnf
+    environment:
+      MYSQL_ROOT_PASSWORD: 'root'
+  pma:
+    image: 'phpmyadmin/phpmyadmin'
+    environment:
+      PMA_HOST: mysql
+    ports:
+      - "9001:80"
+  mailhog:
+    image: mailhog/mailhog
+    ports:
+      - "9002:8025"
